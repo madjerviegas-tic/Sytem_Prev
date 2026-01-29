@@ -18,13 +18,20 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
 
+// Rotas principais
 app.use('/api/auth', authRoutes);
 app.use('/api/computers', computerRoutes);
 app.use('/api/import', importRoutes);
 app.use('/api/reports', reportRoutes);
 
+// Opcional: rota raiz só pra não dar Not Found
+app.get('/', (req, res) => {
+  res.send('API de preventiva está rodando. Use /api/health para testar.');
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
