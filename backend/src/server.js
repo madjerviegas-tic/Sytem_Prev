@@ -13,6 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Rota de teste / healthcheck
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', time: new Date().toISOString() });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/computers', computerRoutes);
 app.use('/api/import', importRoutes);
@@ -22,3 +27,4 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
