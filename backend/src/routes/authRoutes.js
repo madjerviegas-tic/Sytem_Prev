@@ -32,6 +32,36 @@ router.post('/init-admin', async (req, res) => {
   }
 });
 
+// GET /init-admin só para facilitar criação via navegador (opcional/temporário)
+router.get('/init-admin', async (req, res) => {
+  try {
+    const name = 'Admin';
+    const email = 'admin@empresa.com';
+    const password = '123456';
+
+    const exists = await prisma.user.findUnique({ where: { email } });
+    if (exists) {
+      return res.status(400).json({ message: 'Email já cadastrado' });
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        passwordHash: hash,
+        role: Role.ADMIN
+      }
+    });
+
+    res.json({ message: 'Admin criado via GET', user: { id: user.id, email: user.email } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao criar admin (GET)' });
+  }
+});
+
+
 // Login
 router.post('/login', async (req, res) => {
   try {
